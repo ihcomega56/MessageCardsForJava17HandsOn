@@ -37,6 +37,6 @@ public class HandsOn {
 
         repo.readAllMyCards(); // TODO: 8 privateメソッドの中身を実装しよう
 
-        // TODO: 7 新しいカード種別「お願い」を追加しよう
+        // TODO: 9 新しいカード種別「お願い」を追加しよう
     }
 }
