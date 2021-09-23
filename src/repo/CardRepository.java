@@ -1,15 +1,9 @@
 package repo;
 
-import model.Card;
-import model.Card.Celebration;
-import model.Card.Favor;
-import model.Card.Greeting;
 import model.Message;
 import model.Status;
 import model.celebration.Type;
-import model.favor.Deadline;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,8 +29,7 @@ public class CardRepository {
                 new Greeting(new Message("お元気ですか？"), Status.SENT),
                 new Celebration(new Message("はぴば"), Status.EDITING, Type.BIRTHDAY),
                 new Celebration(new Message("結婚おめでとう"), Status.SENT, Type.WEDDING),
-                new Celebration(new Message("よっ部長！"), Status.READ, Type.PROMOTION),
-                new Favor(new Message("あんぱん買ってこい！"), Status.SENT, new Deadline(LocalDateTime.of(2021, 9, 23, 15, 0)))
+                new Celebration(new Message("よっ部長！"), Status.READ, Type.PROMOTION)
         ));
     }
 
@@ -55,9 +48,8 @@ public class CardRepository {
      * @return 「挨拶」カード一覧
      */
     public List<Card> findGreetings() {
-        // TODO 2
-        return myCards.stream().filter(c -> c instanceof Greeting)
-                .collect(Collectors.toList());
+        // TODO 2 仕様を満たした実装をしよう
+        return List.of();
     }
 
     /**
@@ -66,8 +58,9 @@ public class CardRepository {
      * @return 「既読」の「挨拶」カード一覧
      */
     public List<Card> findReadCelebrations() {
-        // TODO 3
-        return myCards.stream().filter(c -> c instanceof Celebration greeting && greeting.status().equals(Status.READ))
+        // TODO 3 もっと簡潔に書けるよ
+        return myCards.stream().filter(c -> c instanceof Celebration)
+                .filter(c -> c.status().equals(Status.READ))
                 .collect(Collectors.toList());
     }
 
@@ -77,9 +70,8 @@ public class CardRepository {
      * @return 取得した「未読」のカード
      */
     public Optional<Card> findSentCard() {
-        // TODO 4
-        return myCards.stream().filter(c -> c.status().equals(Status.SENT))
-                .findFirst();
+        // TODO 4 仕様を満たした実装をしよう
+        return null;
     }
 
     /**
@@ -89,18 +81,21 @@ public class CardRepository {
      * @return プレビュー画面用文
      */
     public String getDisplayText(Card card) {
-        // TODO 5
-        return switch (card) {
-            case Greeting g -> """
+        // TODO 5 Switch式で書き換えてみよう
+        if (card instanceof Greeting) {
+            Greeting greeting = (Greeting) card;
+            return """
                     誰かからメッセージが来たよ
                     %s"
-                    """.formatted(g.message().withEllipsis());
-            case Celebration c -> """
+                    """.formatted(greeting.message().withEllipsis());
+        } else if (card instanceof Celebration) {
+            return """
                     おめでとう！お祝いが届いたよ
                     中身は開けてからのお楽しみ！
                     """;
-            case Favor f -> "お願い事を頼まれたみたいだよ";
-        };
+        } else {
+            return "何かがおかしい！";
+        }
     }
 
     /**
@@ -123,31 +118,19 @@ public class CardRepository {
      * @param card 出力対象のカード
      */
     public void outputCardContent(Card card) {
-        // TODO: 7
-        switch (card) {
-            case Greeting g -> callWhenGreeting(g);
-            case Celebration c -> callWhenCelebration(c);
-            case Favor f -> callWhenFavor(f);
-        }
+        // TODO: 7 仕様を満たした実装をしよう
     }
 
     /**
      * 「未読」のカードを「既読」にして返す
      * (「未読」以外の場合は何もしない)
+     *
      * @param card 更新したいカード
      * @return 「既読」のカード
      */
     private Card read(Card card) {
-        // TODO: 8
-        if (card.status().equals(Status.SENT)) {
-            return switch (card) {
-                case Greeting g -> new Greeting(g.message(), Status.READ);
-                case Celebration c -> new Celebration(c.message(), Status.READ, c.type());
-                case Favor f -> new Favor(f.message(), Status.READ, f.deadline());
-            };
-        } else {
-            return card;
-        }
+        // TODO: 8 仕様を満たした実装をしよう
+        return null;
     }
 
     private void callWhenGreeting(Greeting greeting) {
@@ -160,11 +143,5 @@ public class CardRepository {
         System.out.printf("""
                 お祝いだ！
                 %s%n""", celebration.toString());
-    }
-
-    private void callWhenFavor(Favor favor) {
-        System.out.printf("""
-                お願いだ！
-                %s%n""", favor.toString());
     }
 }
